@@ -12,7 +12,7 @@ def load_notes():
 # Сохранить заметку с новым текстом
 def save_notes(content):
     with open('notes.json', 'w') as file:
-        json.dump(content, file)    
+        json.dump(content, file, indent=4, ensure_ascii=False)    
 
 # Вывод заметки         
 def print_notes(content):
@@ -120,7 +120,8 @@ def search_note():
     
     for i, note in enumerate(content, 1):
         if query in note["text"].lower():
-            print(f'{i} - {note["text"]}')
+            status = '✅' if note['done'] else '❌'
+            print(f'{i} - {note["text"]} [{status}]')
             found = True
             
     if not found:
