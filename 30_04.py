@@ -1,27 +1,39 @@
+
+import json
+
 # Открыть заметку
 def load_notes():
     try:
-        with open('notes.txt', 'r') as file:
-            return file.readlines()
+        with open('notes.json', 'r') as file:
+            return json.load(file)
     except:
         return []
         
 # Сохранить заметку с новым текстом
 def save_notes(content):
-    with open('notes.txt', 'w') as file:
-        file.writelines(content)
-    
+    with open('notes.json', 'w') as file:
+        json.dump(content, file)    
+
 # Вывод заметки         
 def print_notes(content):
-    for i, line in enumerate(content, 1):
-        print(f'{i} - {line.strip()}')
+    for i, note in enumerate(content, 1):
+        status = '✅' if note['done'] else '❌'
+        print(f'{i} - {note["text"]} [{status}]')
 #--------------------------------------------------
 # Добавить новую заметку в файл
 def add_note():
-    note = input('Что записать? ').strip()
-
-    with open('notes.txt', 'a') as file:
-        file.write(note + '\n')
+    content = load_notes()
+    
+    text = input('Что записать? ').strip()
+    
+    note = {
+        'text': text,
+        'done': False
+    }
+    
+    content.append(note)
+    
+    save_notes(content)
 
 # Показать заметки в файле
 def show_notes():
@@ -86,7 +98,7 @@ def edit_note():
             
         if 0 <= index < len(content):
             note = input('Введи новый текст: ')
-            content[index] = note.strip() + '\n'
+            content[index]["text"] = note.strip()
             
             save_notes(content)
 
@@ -106,9 +118,9 @@ def search_note():
     
     found = False
     
-    for i, line in enumerate(content, 1):
-        if query in line.lower().strip():
-            print(f'{i} - {line.strip()}')
+    for i, note in enumerate(content, 1):
+        if query in note["text"].lower():
+            print(f'{i} - {note["text"]}')
             found = True
             
     if not found:
