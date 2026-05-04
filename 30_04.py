@@ -153,6 +153,24 @@ def toggle_done():
         
     else:
         print('Такой записи нет')
+        
+# Фильтры записей
+def show_filtered():
+    content = load_notes()
+    
+    if not content:
+        print('Нет записей')
+        return
+    
+    mode = input('1 - все, 2 - ✅, 3 - ❌:')
+    
+    for note in content:
+        if mode == '1':
+            print(note['text'])
+        elif mode == '2' and note['done']:
+            print(note['text'])
+        elif mode == '3' and not note ['done']:
+            print(note['text'])
             
 # Показать меню
 def menu():
