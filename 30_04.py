@@ -15,10 +15,21 @@ def save_notes(content):
         json.dump(content, file, indent=4, ensure_ascii=False)    
 
 # Вывод заметки         
-def print_notes(content):
+def print_notes(content, show_status=True):
     for i, note in enumerate(content, 1):
-        status = '✅' if note['done'] else '❌'
-        print(f'{i} - {note["text"]} [{status}]')
+        if show_status:
+            status = '✅' if note['done'] else '❌'
+            print(f'{i} - {note['text']} [{status}]')
+        else:
+            print(f'{i} - {note['text']}')
+
+# Проверка контента внутри + загрузка        
+def get_notes():
+    content = load_notes()
+    if not content:
+        print('Нет записей')
+        return None
+    return content
 #--------------------------------------------------
 # Добавить новую заметку в файл
 def add_note():
@@ -145,7 +156,8 @@ def toggle_done():
     index = note - 1
     
     if 0 <= index < len(content):
-        content[index]['done'] = not content[index]['done']
+        current = content[index]['done']
+        content[index]['done'] = not current
         
         save_notes(content)
         
@@ -174,6 +186,16 @@ def show_filtered():
             
 # Показать меню
 def menu():
+    actions = {
+        '1': add_note,
+        '2': show_notes,
+        '3': count_notes,
+        '4': delete_note,
+        '5': edit_note,
+        '6': search_note,
+        '7': toggle_done
+    }
+    
     while True:
         print('\n1 - Добавить запись')
         print('2 - Посмотреть записи')
@@ -184,25 +206,17 @@ def menu():
         print('7 - Изменить статус')
         print('0 - Выход')
         
-        command = input('Выбери: ').strip()
-        if command == '1':
-            add_note()
-        elif command == '2':
-            show_notes()
-        elif command == '3':
-            count_notes()
-        elif command == '4':
-            delete_note()
-        elif command == '5':
-            edit_note()
-        elif command == '6':
-            search_note()
-        elif command == '7':
-            toggle_done()
-        elif command == '0':
+        command = input('Выбери ').strip()
+        
+        if command == '0':
             break
-
-
+        
+        action = actions.get(command)
+        if action:
+            action()
+        else:
+            print('Нет такой команды')
+    
 menu()
 
 
