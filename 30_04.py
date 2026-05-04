@@ -126,6 +126,33 @@ def search_note():
             
     if not found:
         print('Ничего не найдено')
+         
+# Изменение статуса
+def toggle_done():
+    content = load_notes()
+    
+    if not content:
+        print('Нет записей')
+        return
+    print_notes(content)
+    
+    try:
+        note = int(input('Какую запись отметить?'))
+    except:
+        print('Введите число')
+        return
+    
+    index = note - 1
+    
+    if 0 <= index < len(content):
+        content[index]['done'] = not content[index]['done']
+        
+        save_notes(content)
+        
+        print('Статус изменён')
+        
+    else:
+        print('Такой записи нет')
             
 # Показать меню
 def menu():
@@ -136,6 +163,7 @@ def menu():
         print('4 - Удалить запись')
         print('5 - Изменить запись')
         print('6 - Поиск записи')
+        print('7 - Изменить статус')
         print('0 - Выход')
         
         command = input('Выбери: ').strip()
@@ -151,6 +179,8 @@ def menu():
             edit_note()
         elif command == '6':
             search_note()
+        elif command == '7':
+            toggle_done()
         elif command == '0':
             break
 
