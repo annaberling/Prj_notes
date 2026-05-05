@@ -72,50 +72,35 @@ def delete_note():
         return 
         
     print_notes(content)
-            
-    try:
-        note = int(input('Какую запись удалить? '))
-    except:
-        print('Введите число')
-        return
-        
-    index = note - 1 
-        
+    
     if 0 <= index < len(content):
         content.pop(index)
-            
         save_notes(content)
-    
         print('Запись удалена')
-            
     else:
-        print('Нет такой записи')
+        print('Такой записи нет')
 
 # Изменить запись
-def edit_note():
+def edit_note(index, text):
         content = load_notes()
         
-        if not content:
-            print('Нет записей')
-            return
-        print_notes(content)
-        try:
-            note = int(input('Какую запись изменить? '))
-        except:
-            print('Введите число')
-            return
-                
-        index = note - 1 
-            
         if 0 <= index < len(content):
-            note = input('Введи новый текст: ')
-            content[index]["text"] = note.strip()
-            
+            content[index]['text'] = text
             save_notes(content)
-
             print('Запись изменена')
         else:
             print('Такой записи нет')
+            
+def edit_note_ui():
+    try:
+        note = int(input('Какую запись изменить? '))
+    except:
+        print('введите число')
+        return
+    
+    text = input('введите новый текст: ').strip()
+    
+    edit_note(note - 1, text)
 
 # Поиск в заметках            
 def search_note(): 
@@ -184,14 +169,23 @@ def show_filtered():
         elif mode == '3' and not note ['done']:
             print(note['text'])
             
+def delete_note_ui():
+    try:
+        note = int(input('Какую запись удалить? '))
+    except:
+        print('Введите число')
+        return
+    
+    delete_note(note - 1)
+            
 # Показать меню
 def menu():
     actions = {
         '1': add_note,
         '2': show_notes,
         '3': count_notes,
-        '4': delete_note,
-        '5': edit_note,
+        '4': delete_note_ui,
+        '5': edit_note_ui,
         '6': search_note,
         '7': toggle_done
     }
